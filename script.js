@@ -5,6 +5,11 @@ const DOM = [
   'zoomRange', 'zoomValue', 'backgroundSelectGrid', 'backgroundSelectPage', 'editor'
 ].reduce((acc, id) => (acc[id] = document.getElementById(id), acc), {});
 
+DOM.colorPickerBtn.addEventListener('click', () => {
+  currentTool = 'color-picker';
+  DOM.colorPickerBtn.classList.add('active');
+});
+
 const ctx = DOM.canvas.getContext('2d');
 let gridWidth = +DOM.gridWidth.value, gridHeight = +DOM.gridHeight.value;
 let pixelSize = 20, brushSize = +DOM.brushSize.value;
@@ -71,9 +76,13 @@ const hexToHsla = hex => {
   };
 };
 
+const rgbToHex = (r, g, b) => {
+  return `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`;
+};
+
 const updateHexInput = () => {
-  DOM.hexInputColorPicker.value = hslToHex(pixelColor.h, pixelColor.s, pixelColor.l);
-  updateHexInputBackground();
+  const { r, g, b } = hslaToRgba(pixelColor.h, pixelColor.s, pixelColor.l, pixelColor.a);
+  DOM.hex.value = rgbToHex(r, g, b);
 };
 
 const updateHexInputBackground = () => {
@@ -184,7 +193,33 @@ const onCanvasClick = e => {
   } else {
     paintPixel(x, y, currentTool === 'eraser' ? null : hslToRgba(pixelColor.h, pixelColor.s, pixelColor.l, pixelColor.a));
   }
-  drawGrid();
+  if (currentTool === 'color-picker') {
+    const c = drawingData[y]?.[x];
+    if (c) {
+      const rgbToHsla = (r, g, b) => {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h = 0, s = 0, l = (max + min) / 2;
+        const d = max - min;
+      
+        if (d !== 0) {
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+          }
+          h *= 60;
+        }
+      
+        return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+      };      
+    }
+    currentTool = 'pen'; // revenir au crayon après avoir pické
+    DOM.colorPickerBtn.classList.remove('active');
+    return;
+  }  
+  
 };
 
 DOM.brushSize.addEventListener('input', e => (DOM.brushSizeNum.value = e.target.value, brushSize = +e.target.value));
