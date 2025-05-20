@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hamer&PxlForge - edit</title>
+  <link rel="stylesheet" href="appStyles.css">
+  <link rel="icon" href="logo.png">
+</head>
+
+<body>
+  <div id="app">
+    <div id="editor">
+      <canvas id="canvas"></canvas>
+    </div>
+    <aside id="toolbar">
+      <h2>Outils</h2>
+      <div class="tool-group">
+        <label>Outil :</label>
+        <div id="toolContainer">
+          <button class="tool-button" data-tool="brush">
+            <img src="Images/brushtool.svg" alt="Brush Tool">
+          </button>
+          <button class="tool-button" data-tool="eraser">
+            <img src="Images/erasertool.svg" alt="Eraser Tool">
+          </button>
+          <button class="tool-button" data-tool="fill">
+            <img src="Images/buckettool.svg" alt="Bucket Tool">
+          </button>
+          <button class="tool-button" data-tool="colorpicker" id="colorPickerBtn">
+            <img src="Images/colpickertool.svg" alt="Color Picker Tool">
+          </button>
+        </div>
+      </div>
+
+      <div class="tool-group">
+        <label>Taille du pinceau :</label>
+        <input type="range" id="brushSize" min="1" max="5" value="1">
+        <input type="number" id="brushSizeNum" min="1" max="5" value="1">
+        <label><input type="checkbox" id="pixelPerfect" checked> Pixel perfect (1 pixel par clic)</label>
+      </div>
+
+      <div class="tool-group">
+        <label>Couleur HSL :</label>
+        <input type="range" id="hue" min="0" max="360" value="0">
+        <input type="range" id="saturation" min="0" max="100" value="100">
+        <input type="range" id="lightness" min="0" max="100" value="50">
+        <input type="range" id="alpha" min="0" max="1" step="0.01" value="1">
+        <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
+          <input type="text" id="hexInputColorPicker" maxlength="7" placeholder="#rrggbb ou  #rgb">
+        </div>
+      </div>
+
+      <div class="tool-group">
+        <label>Grille :</label>
+        <label for="gridWidth">Largeur :</label>
+        <input type="number" id="gridWidth" value="16" min="4" max="256">
+        <label for="gridHeight">Hauteur :</label>
+        <input type="number" id="gridHeight" value="16" min="4" max="256">
+        <label for="backgroundSelectGrid">Arrière-plan :</label>
+        <select id="backgroundSelectGrid">
+          <option value="transparent">Transparent</option>
+          <option value="black">Noir</option>
+          <option value="white">Blanc</option>
+        </select>
+
+        <button id="generateGrid">Générer</button>
+        <button id="clearGrid">Effacer</button>
+      </div>
+
+      <div class="tool-group">
+        <label>Export / Import :</label>
+        <button id="exportJSON"><img src="Images/expJSON.svg"></button>
+        <button id="exportSVG"><img src="Images/expSVG.svg"></button>
+        <button id="exportPNG"><img src="Images/expPNG.svg"></button>
+        <label for="importFile" style="cursor: pointer; display: inline-block;">
+          <img src="Images/UpJSON.svg" alt="Upload JSON" width="64" height="64" />
+        </label>
+        <input type="file" id="importFile" accept=".json" style="display: none;" />
+        <label for="exportScaleInput">Taille des pixels a l'export:</label>
+        <input type="number" id="exportScaleInput" value="20" min="1" max="100" />
+      </div>
+
+      <div class="tool-group">
+        <label>Page :</label>
+        <label for="zoomRange">Zoom :</label>
+        <input type="range" id="zoomRange" min="0.5" max="10" step="1" value="100">
+        <input type="number" id="zoomValue" min="0.5" max="10" step="1" value="100">
+
+        <label for="backgroundSelectPage">Arrière-plan :</label>
+        <select id="backgroundSelectPage">
+          <option value="gradient">Dégradé</option>
+          <option value="white">Blanc</option>
+          <option value="gray">Gris</option>
+          <option value="black">Noir</option>
+        </select>
+      </div>
+    </aside>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

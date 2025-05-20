@@ -1,0 +1,202 @@
+/* style.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo+Play:slnt@-11..11&family=Cairo:wght@200..1000&display=swap');
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body, html {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: #053;
+    color: #eee;
+  }
+  
+  #app {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  #editor {
+    flex: 1;
+    background: radial-gradient(farthest-corner at 50% 65%, #429effff 0%, #0000ff00 70%), radial-gradient(farthest-corner at 65% 0%, #ff914dff 0%, #0000ff00 70%), radial-gradient(farthest-corner at 85% 50%, #33f1ffff 0%, #0000ff00 70%), radial-gradient(farthest-corner at 25% 25%, #eb52ffff 0%, #0000ff00 70%), radial-gradient(farthest-corner at 25% 75%, #ff7300ff 0%, #0000ff00 70%), linear-gradient(to top, #ebebffff 0% 100%, #ffffffff 100%);
+    background-blend-mode: hard-light;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    padding: 10px;
+  }
+  
+  #canvas {
+    image-rendering: pixelated;
+    border: 1px solid #555;
+    background-color: #fff0;
+    cursor: crosshair;
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: 0 0 10px #0009;
+  }
+  
+  #toolbar {
+    width: 350px;
+    background: #333;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: -2px 0 10px #0008;
+  }
+  
+  #toolbar h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-align: center;
+  }
+  
+  .tool-group {
+    margin-bottom: 20px;
+  }
+  
+  .tool-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  
+  .tool-group input[type="range"],
+  .tool-group input[type="number"],
+  .tool-group select {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: none;
+    background: #444;
+    color: #eee;
+    font-size: 14px;
+    outline: none;
+    box-shadow: inset 0 0 4px #0006;
+  }
+  
+  .tool-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #09f;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid #06c;
+    box-shadow: 0 0 4px #06c;
+  }
+  
+  .tool-group input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #09f;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid #06c;
+    box-shadow: 0 0 4px #06c;
+  }
+  
+  #colorPreview {
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #666;
+    box-shadow: inset 0 0 8px #0006;
+  }
+  
+  #jsonOutput {
+    width: 100%;
+    height: 100px;
+    background: #222;
+    border: 1px solid #555;
+    color: #eee;
+    font-family: monospace;
+    font-size: 13px;
+    padding: 8px;
+    resize: vertical;
+    box-shadow: inset 0 0 5px #0008;
+  }
+
+.tool-button {
+  padding: 0.25em;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.5em;
+  height:2em;
+  width:2em;
+  img{
+    width: 1.5em;
+    height: 1.5em;
+  }
+}
+
+.tool-button.selected {
+  border: 3px solid #555;
+  padding: calc(0.25em - 1px)
+}
+ label[for="importFile"],
+  button {
+    background: #09f;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    margin-right: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    user-select: none;
+    margin: 5px;
+  }
+  label[for="importFile"]:hover,
+  button:hover {
+    background: #06c;
+  }
+  
+  input[type="file"] {
+    width: 100%;
+    margin-top: 8px;
+    color: #eee;
+    background: #444;
+    border-radius: 4px;
+    padding: 4px;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 6px;
+    cursor: pointer;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #222;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #777;
+  }
+
+#hexInputColorPicker{
+  font-family: "Cairo";
+  padding: 0.25em;
+  text-align: center;
+  border: None;
+  font-size: 1.5em;
+  width: 100%;
+  border-radius: 5px;
+}
