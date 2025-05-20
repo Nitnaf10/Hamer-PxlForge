@@ -207,6 +207,65 @@ DOM.generateGrid.addEventListener('click', () => {
 
 DOM.clearGrid.addEventListener('click', () => { createEmptyGrid(gridWidth, gridHeight); drawGrid(); });
 
+DOM.importFile.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = evt => {
+    try {
+      const json = JSON.parse(evt.target.result);
+      if (!Array.isArray(json)) throw new Error("Invalide.");
+      gridHeight = json.length; gridWidth = json[0].length;
+      drawingData = json.map(row => row.map(hex => {
+        if (!hex) return null;
+        const b = parseInt(hex.slice(1), 16);
+        return { r: (b >> 24) & 255, g: (b >> 16) & 255, b: (b >> 8) & 255, a: (b & 255) / 255 };
+      }));
+      resizeCanvas(gridWidth, gridHeight, pixelSize); drawGrid(); saveHistory();
+    } catch (err) {
+      alert("Erreur : " + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+DOM.exportJSON.addEventListener('click', () => {
+  const data = drawingData.map(row => row.map(px => {
+    if (!px) return null;
+    return `#${px.r.toString(16).padStart(2, '0')}${px.g.toString(16).padStart(2, '0')}${px.b.toString(16).padStart(2, '0')}${Math.round(px.a * 255).toString(16).padStart(2, '0')}`;
+  }));
+  downloadText(JSON.stringify(data), "grid.json", "application/json");
+});
+
+DOM.exportSVG.addEventListener('click', () => {
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${gridWidth * pixelSize}" height="${gridHeight * pixelSize}">`;
+  for (let y = 0; y < gridHeight; y++)
+    for (let x = 0; x < gridWidth; x++) {
+      const px = drawingData[y][x];
+      if (px) svg += `<rect x="${x * pixelSize}" y="${y * pixelSize}" width="${pixelSize}" height="${pixelSize}" fill="rgba(${px.r},${px.g},${px.b},${px.a})"/>`;
+    }
+  svg += `</svg>`;
+  downloadText(svg, "grid.svg", "image/svg+xml");
+});
+
+DOM.exportPNG.addEventListener('click', () => {
+  const scale = Math.max(1, +DOM.exportScaleInput.value || 1);
+  const ec = document.createElement('canvas');
+  ec.width = gridWidth * pixelSize * scale;
+  ec.height = gridHeight * pixelSize * scale;
+  const ect = ec.getContext('2d');
+  for (let y = 0; y < gridHeight; y++)
+    for (let x = 0; x < gridWidth; x++) {
+      const px = drawingData[y][x];
+      ect.fillStyle = px ? `rgba(${px.r},${px.g},${px.b},${px.a})` : 'rgba(0,0,0,0)';
+      ect.fillRect(x * pixelSize * scale, y * pixelSize * scale, pixelSize * scale, pixelSize * scale);
+    }
+  const a = document.createElement('a');
+  a.href = ec.toDataURL('image/png');
+  a.download = 'grid.png';
+  a.click();
+});
+
 DOM.zoomRange.addEventListener('input', e => {
   pixelSize = +e.target.value;
   DOM.zoomValue.textContent = `${pixelSize}px`;
@@ -229,6 +288,16 @@ DOM.backgroundSelectPage.addEventListener('change', e => {
        linear-gradient(to top, #ebebffff 0% 100%, #ffffffff 100%)`
     : v;
 });
+
+const downloadText = (text, filename, type = 'text/plain') => {
+  const blob = new Blob([text], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
+};
+
+[DOM.hue, DOM.saturation, DOM.lightness, DOM.alpha].forEach(i => i.addEventListener('input', updateHexInputBackground));
+updateHexInputBackground();
 
 createEmptyGrid(gridWidth, gridHeight);
 resizeCanvas(gridWidth, gridHeight, pixelSize);
